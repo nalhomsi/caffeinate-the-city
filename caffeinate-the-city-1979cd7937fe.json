@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "caffeinate-the-city",
+  "private_key_id": "1979cd7937fef58ece274b1b34eefd3d0224d3ad",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQDAQ6B2WlHdKL+A\ndObbNFpmsMUCVNxN480WCFnG2VEbQm1OsQGIjt9SxdJgVPSGml+bxnkQNxZ0JbQ9\n7e2gh+9d4Rde0wW5PyXs/9W8Osu13MahT+r+8rs565gOghe6hJSM3GEyYwbXX37n\nYuz7AnWLgEyQc2BSY5HMWCB56yw7r0fBMHGQSLbTcEVHpMVjKBL13EuWVOYgKu0R\nodGBYdf43SsVnWmthfMvswPwkHLMfgBj5DwFlWu5w/O373O4nVomtpYb3TqF4/HO\nzTOU+zwp6lQ4BcfnXulvsmTBFgnH0cR0kRI0pEzIBJZ1wuGZ+tqT7N+i/PJ3rvE8\naKLlE8+TAgMBAAECgf9Dsk+iOO6jih1quL0uwnUSPwZrR9xmKJfXb/vPWPzUJ/Xu\nioOzrwpz9vJoROl9nCA8gvNKnqaW41EXdW4VjHI4C7XD1G2rnc6UddpUpfveC4xU\nj2EJxZSsT3NuC6AK/Q04Wj5njWWXAdjSbQKtYkeOVjgQf2WOrf+uXtcBCLR5X+uu\nFzJJeB8z0KgNIb6txkdfN8yUMzmCmoevdUNpFoE4W9Lzy9YMcpvzUnBKqxeTQ3D3\n0TVYqvEybeMuHULfvpBIK4c3CHWOoHDwfX7uAJNQ4djudCOni/D3l4BdmpLsOdgQ\nNLb1ohRuOyVq9MndCn9XOqajrxUgVv5tTBh4VgkCgYEA9iSjzAGmyPRo+VRvyfQb\neYRQWKxGw9ac6kmEeHdRtO9FLtl0Gr3LLi0amV4tjt++FfBaNAey5QdNz7qBsyvl\n7dgygJnct5UTJ2Co9QaX0vPX4GzXDa5CJZUt2eMq06s8i5oH82/tC2FgzB/qigMB\n24bpZN2b1YCjJPWJrGvIrA0CgYEAx/akQGCgbHi1LmoXhogL/zNKPsc4MOFOErnL\nGQVhzzLlNlsWC8ix3ItwoorEaQZm5eL+1SnnjxXFqcFaQOa9FRpTvXl9G6AWHCFh\nOykSsi7iuSNVM+rcm/nuW9w1YQ8Ar/xAKu65gH4lnuPmoK/HI8ys/mOXZihQOFyg\nemESYh8CgYEAspWA1dn45WIW65csiEz4xiCOntdXfG0wafevCiwf9vOGsWgKCgDb\n8oO9AbtHuJpy8r3w5EEVtX+oH+gEhDd8WiV69r0rW3Loc7B4xVXkP6S1Ytn06bMd\nwODMZIKiJvLdObgmvqPdS116en9JjpqB9YGbwpfaoXv0YjNXkOaesN0CgYAwo3Ce\nbCJ5X/8KFCo2wf7RC2PC02h6k0MPUPvy0RlScdnJF+zL3vxMXep+zuwpc7Ixtr4v\nkWrOpggXW32djcJuUKIP0243+v+FxiTFZB81Eix5xftijn0sv2VYGL8vJZwQMnZV\nOw4KECUMefjOGxOARLfLhOP9qE6i9vzd56C2FwKBgHT/bPxqPoqG2HhEtuf1OFUi\nk/C9YYtRYt/Rk/TfxXPAL0qr4CERMpPHSc8vpGDMIGHzmmAmXjkd9fbJMOaURn22\ngR0NOQO+898WOAQ0mfTXOt3gx7sPTy/H9erReG4TEZpzEV9yYWzEVHMcPBU+TVp7\n0czb1v7F4SsggLnFO4N9\n-----END PRIVATE KEY-----\n",
+  "client_email": "caffeinate-the-city@caffeinate-the-city.iam.gserviceaccount.com",
+  "client_id": "103040315743417592053",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/caffeinate-the-city%40caffeinate-the-city.iam.gserviceaccount.com"
+}
