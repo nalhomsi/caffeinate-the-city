@@ -6,19 +6,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Caffeinating the City</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
-
+  <title>Caffeinate the City</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Stint+Ultra+Condensed&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="css/styles.css">
+ <link rel="stylesheet" href="styles.css">
 
 </head>
 
+<h3>Austin Coffee Shops</h3>
+<!--The div element for the map -->
+<div id="map"></div>
+
+<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6n0DJBFKSZ0yhfHt4c15HtS1UgJvu4FI&callback=initMap&libraries=&v=weekly"
+  async
+></script>
 
 <body>
-  <script src="js/scripts.js"></script>
+  <script src="scripts.js"></script>
 </body>
 
 </html>
