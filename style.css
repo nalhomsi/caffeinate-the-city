@@ -47,7 +47,7 @@ body {
 
 /* Navbar links */
 .topnav a {
-    position:absolute; left:80px; top:20px;
+   float: left;
     color: #f2f2f2;
     text-align: center;
     padding: 14px 16px;

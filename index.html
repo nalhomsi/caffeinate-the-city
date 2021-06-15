@@ -55,7 +55,7 @@
 
 		/* Navbar links */
 		.topnav a {
-			position:relative;
+			float: left;
 			color: #f2f2f2;
 			text-align: center;
 			padding: 14px 16px;
@@ -67,13 +67,26 @@
 			background-color: #7f5e52;
 			color: #e4dcd1;
 		}
+		.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 	
 	</style>
 </head>
 
 <body>
 
-	<h2 class="brown-text" style="color: #7f5e52;;">Caffeinate the City</h2>
+	<h2 class="brown-text" style="color: #7f5e52;">Caffeinate the City</h2>
 	<div class="bg-img">
 		<div class="container">
 			<div class="topnav">
@@ -84,11 +97,10 @@
 			
 		</div>
 	</div>
-	<div style="padding:15px 15px 2500px;font: size 20px">
-		<center><p>Lorem ipsum dolor dummy text sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-			labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+	<div style="padding:15px 15px 200px;font: size 20px">
+		<center><p> Tired of starbucks? Find your new local spot by searching the map.
 			
-			<iframe width="800" height="650" style="border:0" loading="lazy" allowfullscreen
+			<iframe width="1000" height="650" style="border:0" loading="lazy" allowfullscreen
 			src="https://www.google.com/maps/embed/v1/search?q=coffee+shops+near+Austin,+TX,+USA&key=AIzaSyBdaWoH6rDlY1wNgUn41fBW3FE433J2NNo"></iframe></p></center>
 	</div>
 
