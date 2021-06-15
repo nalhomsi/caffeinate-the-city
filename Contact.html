@@ -9,13 +9,15 @@
             left: 0;
             bottom: 0;
             width: 100%;
-            background-color: rgb(75, 52, 11);
+            background-color: #695856;
             color: white;
             text-align: center;
         }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+			background-color: #e4dcd1
         }
 
         * {
@@ -25,6 +27,7 @@
         .bg-img {
             /* The image used */
             background-image: url("coffee.jpg");
+            background-color: #e4dcd1;
 
             min-height: 380px;
 
@@ -52,7 +55,7 @@
 
         /* Navbar links */
         .topnav a {
-            float: left;
+            position: relative;
             color: #f2f2f2;
             text-align: center;
             padding: 14px 16px;
@@ -61,10 +64,10 @@
         }
 
         .topnav a:hover {
-            background-color: #ddd;
-            color: black;
+            background-color: #7f5e52;
+			color: #e4dcd1;
         }
-
+/*contact box*/
         input[type=text],
         select,
         textarea {
@@ -76,6 +79,7 @@
             margin-top: 6px;
             margin-bottom: 16px;
             resize: vertical;
+        
         }
 
         input[type=submit] {
@@ -93,6 +97,7 @@
 
         .container {
             border-radius: 5px;
+            position: absolute; left:200px; top:375px; 
             background-color: #f2f2f2;
             padding: 20px;
         }
@@ -100,7 +105,8 @@
 </head>
 
 <body>
-    <h3>Caffeinate the City</h3>
+   
+	<h2 class="brown-text" style="color: #7f5e52;;">Caffeinate the City</h2>
     <div class="bg-img">
         <div class="container">
             <div class="topnav">
