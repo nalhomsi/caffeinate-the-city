@@ -12,6 +12,7 @@
 			font-family: Arial, Helvetica, sans-serif;
 			color: black;
 			background-color: #e4dcd1;
+			background-image: url("../../oldgrain.jpg");
 
 		}
 
@@ -41,7 +42,7 @@
 		/* The navbar */
 		.topnav {
 			overflow: hidden;
-			background-color: #333;
+			background-color: rgb(68, 44, 9);
 		} 
 
 		/* Navbar links */
