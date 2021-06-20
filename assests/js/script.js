@@ -1,12 +1,13 @@
+// Object array containing coffee shop information
 var coffeeShops = [
   {
     Name: "Epoch @ North Loop",
-    Address: "221 W N Loop Blvd, Austin, TX 78751",
+    Address: "221%20W%20N%20Loop%20Blvd,%20Austin,%20TX%2078751",
     Website: "http://www.epochcoffee.com/"
   },
   {
     Name: "Epoch @ the Village",
-    Address: "2700 W Anderson Ln #409, Austin, TX 78757",
+    Address: "2700%20W%20Anderson%20Ln%20#409,%20Austin,%20TX%2078757",
     Website: "http://epochcoffee.com/"
   },
   {
@@ -149,7 +150,74 @@ var coffeeShops = [
     Address: "5011 Duval St, Austin, TX 78751",
     Website: "http://flightpathcoffeehouse.com/"
   }
-]
+];
+
+function restrictMap(map){
+  var bounds = new H.geo.Rect(30.397704598324953,-97.82197149621298,30.202843286012932,-97.69906076638804);
+  map.getViewModel().addEventListener('sync', function() {
+    var center = map.getCenter();
+
+    if (!bounds.containsPoint(center)) {
+      if (center.lat > bounds.getTop()) {
+        center.lat = bounds.getTop();
+      } else if (center.lat < bounds.getBottom()) {
+        center.lat = bounds.getBottom();
+      }
+      if (center.lng < bounds.getLeft()) {
+        center.lng = bounds.getLeft();
+      } else if (center.lng > bounds.getRight()) {
+        center.lng = bounds.getRight();
+      }
+      map.setCenter(center);
+    }
+  });
+}
+
+function setMapViewBounds(map){
+  var bbox = new H.geo.Rect(30.397704598324953,-97.82197149621298,30.202843286012932,-97.69906076638804);
+  map.getViewModel().setLookAtData({
+    bounds: bbox
+  });
+}
+// Here API Information
+var platform = new H.service.Platform({
+  'apikey': 'ycAxA8uZf-kPh9Jz-FGc9BttR8Zqv8M6XnO4jhwO6ko'
+});
+
+// Obtain the default map types from the platform object:
+var defaultLayers = platform.createDefaultLayers();
+
+//Step 2: initialize a map - this map is centered over Europe
+var map = new H.Map(document.getElementById('mapContainer'),
+  defaultLayers.vector.normal.map,{
+  center: {lat:50, lng:5},
+  zoom: 4,
+  pixelRatio: window.devicePixelRatio || 1
+});
+
+map.getViewModel().setLookAtData({
+  tilt: 45
+});
+
+var coffeeSvg = '<object data="coffee-svgrepo-com.svg" type="image/svg+xml/>'
+
+// add a resize listener to make sure that the map occupies the whole container
+window.addEventListener('resize', () => map.getViewPort().resize());
+
+//Step 3: make the map interactive
+// MapEvents enables the event system
+// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+// Create the default UI components
+var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+// Now use the map as required...
+window.onload = function () {
+  setMapViewBounds(map);
+  restrictMap(map);
+}
+
 
 // When the user scrolls down 20px from the top of the document, slide down the navbar
 window.onscroll = function () { scrollFunction() };

@@ -4,6 +4,11 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assests/css/style.css">
+	<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+	<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+	<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
 </head>
 
 <body>
@@ -11,17 +16,12 @@
 		<div class="container">
 			<div class="topnav">
 				<a href="index.html">Caffeinate the City</a>
-
 			</div>
-
 		</div>
 	</div>
-	-<div id="map-section">
+	<div id="map-section">
 		<p> Tired of starbucks? Find your new local spot by searching the map. </p>
-
-			<iframe width="1000" height="650" style="border:0" loading="lazy" allowfullscreen
-				src="https://www.google.com/maps/embed/v1/search?q=coffee+shops+near+Austin,+TX,+USA&key=AIzaSyBdaWoH6rDlY1wNgUn41fBW3FE433J2NNo"></iframe>
-
+		<div style="width: 640px; height: 480px" id="mapContainer"></div>
 	</div>
 
 	<div class="footer">
