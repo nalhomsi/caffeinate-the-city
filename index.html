@@ -2,32 +2,37 @@
 <html>
 
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+     <meta name="HandheldFriendly" content="true">
+	<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 	<link rel="stylesheet" href="assests/css/style.css">
+	<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+	<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
 </head>
 
 <body>
 	<div class="bg-img">
 		<div class="container">
 			<div class="topnav">
-				<a href="index.html">Caffeinate the City</a>
-
+				<a href=index.html>Caffeinate</a>
+				<a href=spotlight.html>Spotlight</a>
+				<a href=reviews.html>Reviews</a>
+				<a href=contact.html>Contact</a>
 			</div>
-
 		</div>
 	</div>
-	-<div id="map-section">
-		<p> Tired of starbucks? Find your new local spot by searching the map. </p>
-
-			<iframe width="1000" height="650" style="border:0" loading="lazy" allowfullscreen
-				src="https://www.google.com/maps/embed/v1/search?q=coffee+shops+near+Austin,+TX,+USA&key=AIzaSyBdaWoH6rDlY1wNgUn41fBW3FE433J2NNo"></iframe>
-
+	<div id="map-section">
+		<div style="height: 600px" id="mapContainer"></div>
 	</div>
 
 	<div class="footer">
-		<p>Footer</p>
+		<p> &#169; 2021 Geoffrey, Jason, Justin, and Noor. &#169;Header image Dmitry Kostyukov for The New York Times </p>
 	</div>
 	<script src="assests/js/script.js"></script>
 </body>
 
 </html>
+
