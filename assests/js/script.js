@@ -175,6 +175,30 @@ var coffeeShops = [
     coords: {lat: 30.313769, lon: -97.719875}
   }
 ];
+function addMarkerToGroup(group, coordinate, html){
+  var marker = new H.map.Marker(coordinate);
+  marker.setData(html);
+  group.addObject(marker);
+}
+
+function addInfoBubble(map) {
+  var group = new H.map.Group();
+  map.addObject(group);
+
+  group.addEventListener('tap', function (evt) {
+    var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+      content: evt.target.getData()
+    });
+
+    ui.addBubble(bubble);
+  }, false);
+
+  coffeeShops.forEach(function(shop) {
+    addMarkerToGroup(group, {lat: shop.coords.lat, lng: shop.coords.lon},
+      '<div><a href="' + shop.Website + '" target="_blank">' + shop.Name + '</a></div>' + 
+      '<div>' + shop.Address + '</div>');
+  });
+}
 
 function restrictMap(map){
   var bounds = new H.geo.Rect(30.397704598324953,-97.82197149621298,30.202843286012932,-97.69906076638804);
@@ -240,6 +264,7 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 window.onload = function () {
   setMapViewBounds(map);
   restrictMap(map);
+  addInfoBubble(map);
 }
 
 
