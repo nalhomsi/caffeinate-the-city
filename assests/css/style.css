@@ -28,10 +28,15 @@ body {
 }
 /* The navbar */
 .topnav {
-    overflow: hidden;
+    overflow:auto;
     background-color: rgb(32, 20, 2);
     border-radius: 10px;
 }
+
+nav{
+	width: 500px;
+}
+
 /* Navbar links */
 .topnav a {
     float: left;
