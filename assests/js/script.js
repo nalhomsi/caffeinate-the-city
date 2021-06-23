@@ -243,6 +243,12 @@ function createShopButtons() {
     $('#shop-list').append('<a class="panel-block"><button class="button is-link is-fullwidth shopbtns">' + shop.Name + '</button></a>');
   })
 }
+
+function searchCoffeeShop(shopName) {
+  var index = coffeeShops.findIndex(x => x.Name === shopName);
+  map.setCenter({lat: coffeeShops[index].coords.lat, lng: coffeeShops[index].coords.lon});
+  map.setZoom(18, true);
+}
 // End Function Section
 
 // Main
@@ -285,6 +291,12 @@ window.onload = function () {
   createShopButtons();
 }
 
+// When a shop button is clicked, zoom in on the map at the specified location
+$("#shop-list").on("click", ".shopbtns", function() {
+  var shopSearch = $(this).text();
+  console.log("Hey " + shopSearch + " was clicked");
+  searchCoffeeShop(shopSearch);
+})
 
 // When the user scrolls down 20px from the top of the document, slide down the navbar
 window.onscroll = function () { scrollFunction() };

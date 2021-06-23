@@ -82,7 +82,11 @@ nav{
     width: 100%;
 }
 
-
+.shopbtns {
+	white-space:normal;
+	word-wrap: break-word;
+	height: auto;
+}
 .footer {
     width: 100%;
     background-color: rgb(68, 44, 9);
