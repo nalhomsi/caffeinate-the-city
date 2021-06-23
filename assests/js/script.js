@@ -1,19 +1,19 @@
 // Object array containing coffee shop information
 var coffeeShops = [
   {
-    Name: "Epoch @ North Loop",
+    Name: "Epoch - North Loop",
     Address: "221 W N Loop Blvd, Austin, TX 78751",
     Website: "http://www.epochcoffee.com/",
     coords: {lat: 30.318604, lon: -97.72454}
   },
   {
-    Name: "Epoch @ the Village",
+    Name: "Epoch - the Village",
     Address: "2700 W Anderson Ln #409, Austin, TX 78757",
     Website: "http://epochcoffee.com/",
     coords: {lat: 30.359107, lon: -97.734541}
   },
   {
-    Name: "Epoch @ Far West",
+    Name: "Epoch - Far West",
     Address: "3900 Far West Blvd, Austin, TX 78731",
     Website: "http://epochcoffee.com/",
     coords: {lat: 30.357313, lon: -97.760621}
@@ -31,7 +31,7 @@ var coffeeShops = [
     coords: {lat: 30.355512, lon: -97.73019}
   },
   {
-    Name: "Lazydaze +Coffeeshop",
+    Name: "Lazydaze Coffeeshop",
     Address: "1738 W Anderson Ln, Austin, TX 78757",
     Website: "https://www.lazydazeshop.com/",
     coords: {lat: 30.353472, lon: -97.724432}
@@ -240,6 +240,7 @@ function setMapViewBounds(map, bool){
 // Function to generate shop buttons for each entry in the coffeeShops array
 function createShopButtons() {
   coffeeShops.forEach(function(shop){
+    $('#directionsSelect').append('<option value="' + shop.coords.lat + ',' + shop.coords.lon + '">' + shop.Name + '</option>');
     $('#shop-list').append('<a class="panel-block"><button class="button is-link is-fullwidth shopbtns">' + shop.Name + '</button></a>');
   })
 }
@@ -250,6 +251,244 @@ function searchCoffeeShop(shopName) {
   map.setCenter({lat: coffeeShops[index].coords.lat, lng: coffeeShops[index].coords.lon});
   map.setZoom(18, true);
 }
+
+// Function to geocode user's entered address
+function geocode(platform) {
+  var geocoder = platform.getSearchService(),
+      geocodingParameters = {
+        q: $("#userAddress").val()
+      };
+  geocoder.geocode(
+    geocodingParameters,
+    onSuccess,
+    onError
+  );
+}
+
+function onSuccess(result) {
+  var locations = result.items;
+  calculateRouteFromAtoB(platform, locations);
+}
+
+function onError(error) {
+  alert("Can't reach remote server");
+}
+
+function addLocationsToPanel(locations){
+  var nodeOL = document.createElement('ul'),
+      i;
+
+  nodeOL.style.fontSize = 'small';
+  nodeOL.style.marginLeft ='5%';
+  nodeOL.style.marginRight ='5%';
+
+
+   for (i = 0;  i < locations.length; i += 1) {
+     let location = locations[i];
+     var li = document.createElement('li'),
+          divLabel = document.createElement('div'),
+          address = location.address,
+          content =  '<strong style="font-size: large;">' + address.label  + '</strong></br>';
+          position = location.position;
+
+      content += '<strong>houseNumber:</strong> ' + address.houseNumber + '<br/>';
+      content += '<strong>street:</strong> '  + address.street + '<br/>';
+      content += '<strong>district:</strong> '  + address.district + '<br/>';
+      content += '<strong>city:</strong> ' + address.city + '<br/>';
+      content += '<strong>postalCode:</strong> ' + address.postalCode + '<br/>';
+      content += '<strong>county:</strong> ' + address.county + '<br/>';
+      content += '<strong>country:</strong> ' + address.countryName + '<br/>';
+      content += '<strong>position:</strong> ' +
+        Math.abs(position.lat.toFixed(4)) + ((position.lat > 0) ? 'N' : 'S') +
+        ' ' + Math.abs(position.lng.toFixed(4)) + ((position.lng > 0) ? 'E' : 'W') + '<br/>';
+
+      divLabel.innerHTML = content;
+      li.appendChild(divLabel);
+
+      nodeOL.appendChild(li);
+      console.log(position);
+  }
+
+  $('#outputDirections').append(nodeOL);
+}
+
+function calculateRouteFromAtoB(platform, locations) {
+  console.log(locations[0].position)
+  var router = platform.getRoutingService(null, 8),
+      routeRequestParams = {
+        routingMode: 'fast',
+        transportMode: 'car',
+        origin: locations[0].position.lat + ',' + locations[0].position.lng, // User's inputted address
+        destination: $('#directionsSelect').val(), // Selected coffee shop
+        return: 'polyline,turnByTurnActions,actions,instructions,travelSummary'
+      };
+
+  router.calculateRoute(
+    routeRequestParams,
+    routeOnSuccess,
+    routeOnError
+  ); 
+}
+
+function routeOnSuccess(result) {
+  var route = result.routes[0];
+
+  addRouteShapeToMap(route);
+  addManueversToMap(route);
+  addWaypointsToPanel(route);
+  addManueversToPanel(route);
+  addSummaryToPanel(route);
+}
+
+function routeOnError(error) {
+  alert("Can't reach the remote server");
+}
+
+function openBubble(position, text) {
+  if (!bubble) {
+    bubble = new H.ui.InfoBubble(
+      position,
+      // The FO property holds the province name.
+      {content: text});
+    ui.addBubble(bubble);
+  } else {
+    bubble.setPosition(position);
+    bubble.setContent(text);
+    bubble.open();
+  }
+}
+
+function addRouteShapeToMap(route) {
+  route.sections.forEach((section) => {
+    // decode LineString from the flexible polyline
+    let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+
+    // Create a polyline to display the route:
+    let polyline = new H.map.Polyline(linestring, {
+      style: {
+        lineWidth: 4,
+        strokeColor: 'rgba(0, 128, 255, 0.7)'
+      }
+    });
+
+    polyline.id = "route";
+    // Add the polyline to the map
+    map.addObject(polyline);
+    // And zoom to its bounding rectangle
+    map.getViewModel().setLookAtData({
+      bounds: polyline.getBoundingBox()
+    });
+  });
+}
+
+function addManueversToMap(route) {
+  var svgMarkup = '<svg width="18" height="18" ' +
+    'xmlns="http://www.w3.org/2000/svg">' +
+    '<circle cx="8" cy="8" r="8" ' +
+      'fill="#1b468d" stroke="white" stroke-width="1" />' +
+    '</svg>',
+    dotIcon = new H.map.Icon(svgMarkup, {anchor: {x:8, y:8}}),
+    group = new H.map.Group(),
+    i,
+    j;
+  group.id = "route";
+  route.sections.forEach((section) => {
+    let poly = H.geo.LineString.fromFlexiblePolyline(section.polyline).getLatLngAltArray();
+
+    let actions = section.actions;
+    // Add a marker for each maneuver
+    for (i = 0; i < actions.length; i += 1) {
+      let action = actions[i];
+      var marker = new H.map.Marker({
+        lat: poly[action.offset * 3],
+        lng: poly[action.offset * 3 + 1]},
+        {icon: dotIcon});
+      marker.instruction = action.instruction;
+      group.addObject(marker);
+    }
+
+    group.addEventListener('tap', function (evt) {
+      map.setCenter(evt.target.getGeometry());
+    }, false);
+
+    // Add the maneuvers group to the map
+    map.addObject(group);
+  });
+}
+
+function addWaypointsToPanel(route) {
+  var nodeH3 = document.createElement('h3'),
+    labels = [];
+
+  route.sections.forEach((section) => {
+    labels.push(
+      section.turnByTurnActions[0].nextRoad.name[0].value)
+    labels.push(
+      section.turnByTurnActions[section.turnByTurnActions.length - 1].currentRoad.name[0].value)
+  });
+
+  nodeH3.textContent = labels.join(' - ');
+  $('#outputDirections').append(nodeH3);
+}
+
+function addSummaryToPanel(route) {
+  let duration = 0,
+    distance = 0;
+
+  route.sections.forEach((section) => {
+    distance += section.travelSummary.length;
+    duration += section.travelSummary.duration;
+  });
+
+  var summaryDiv = document.createElement('div'),
+    content = '<b>Total distance</b>: ' + distance + 'm. <br />' +
+      '<b>Travel Time</b>: ' + toMMSS(duration) + ' (in current traffic)';
+
+  summaryDiv.style.fontSize = 'small';
+  summaryDiv.style.marginLeft = '5%';
+  summaryDiv.style.marginRight = '5%';
+  summaryDiv.innerHTML = content;
+  $('#outputDirections').append(summaryDiv);
+}
+
+function addManueversToPanel(route) {
+  var nodeOL = document.createElement('ol');
+
+  nodeOL.style.fontSize = 'small';
+  nodeOL.style.marginLeft ='5%';
+  nodeOL.style.marginRight ='5%';
+  nodeOL.className = 'directions';
+
+  route.sections.forEach((section) => {
+    section.actions.forEach((action, idx) => {
+      var li = document.createElement('li'),
+        spanArrow = document.createElement('span'),
+        spanInstruction = document.createElement('span');
+
+      spanArrow.className = 'arrow ' + (action.direction || '') + action.action;
+      spanInstruction.innerHTML = section.actions[idx].instruction;
+      li.appendChild(spanArrow);
+      li.appendChild(spanInstruction);
+
+      nodeOL.appendChild(li);
+    });
+  });
+
+  $('#outputDirections').append(nodeOL);
+}
+
+function toMMSS(duration) {
+  return Math.floor(duration / 60) + ' minutes ' + (duration % 60) + ' seconds.';
+}
+
+function removeObjectsById(id){
+  for (object of map.getObjects()) {
+    if (object.id === id) {
+      map.removeObject(object);
+    }
+  }
+}
+
 // End Function Section
 
 // Main
@@ -305,6 +544,10 @@ $("#shop-list").on("click", ".shopbtns", function() {
   else {
     searchCoffeeShop(shopSearch);
   }
+})
+
+$("#directionSubmit").on("click", function() {
+  geocode(platform);
 })
 
 // When reset button is clicked, bring map back to original position

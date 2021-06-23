@@ -35,6 +35,35 @@
 			</button>
 		</div>
 	</div>
+	<div id="directions" class="container">
+		<div class="columns">
+			<div class="column">
+				<div class="field">
+					<label for="inputAddress" class="label">Enter your Address:</label>
+					<div class="control">
+						<input id="userAddress" type="text" class="input" placeholder="1100 Congress Ave, Austin, TX 78701">
+					</div>
+				</div>
+				<div class="field">
+					<label for="selectCoffeeShop" class="label">Select Coffee Shop</label>
+					<div class="control">
+						<div class="select is-primary is-rounded">
+							<select id="directionsSelect"></select>
+						</div>
+					</div>
+				</div>
+				<div class="field is-grouped">
+					<div class="control">
+						<input id="directionSubmit" type="submit" class="button" value="Submit">
+						<input type="reset" class="button" value="Reset">
+					</div>
+				</div>
+			</div>
+			<div id="outputDirections" class="column">
+				<h1>Directions</h3>
+			</div>
+		</div>
+	</div>
 	
 	<div class="footer">
 		<p> &#169; 2021 Geoffrey, Jason, Justin, and Noor. &#169;Header image Dmitry Kostyukov for The New York Times </p>
