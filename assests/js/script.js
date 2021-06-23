@@ -230,11 +230,11 @@ function restrictMap(map){
 }
 
 // Function to set the view bounds within a map region
-function setMapViewBounds(map){
+function setMapViewBounds(map, bool){
   var bbox = new H.geo.Rect(30.397704598324953,-97.82197149621298,30.202843286012932,-97.69906076638804);
   map.getViewModel().setLookAtData({
     bounds: bbox
-  });
+  }, bool);
 }
 
 // Function to generate shop buttons for each entry in the coffeeShops array
@@ -244,6 +244,7 @@ function createShopButtons() {
   })
 }
 
+// Function to find the coordinates of the corresponding coffee shop button being pressed and centers the map and zooms in on the location
 function searchCoffeeShop(shopName) {
   var index = coffeeShops.findIndex(x => x.Name === shopName);
   map.setCenter({lat: coffeeShops[index].coords.lat, lng: coffeeShops[index].coords.lon});
@@ -285,17 +286,30 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 // On window load, create the map
 window.onload = function () {
-  setMapViewBounds(map);
+  setMapViewBounds(map, false);
   restrictMap(map);
   addInfoBubble(map);
   createShopButtons();
 }
 
-// When a shop button is clicked, zoom in on the map at the specified location
+// When a shop button is clicked, center map and zoom in on the specified location
 $("#shop-list").on("click", ".shopbtns", function() {
   var shopSearch = $(this).text();
-  console.log("Hey " + shopSearch + " was clicked");
-  searchCoffeeShop(shopSearch);
+  var zoom = map.getZoom();
+  if (zoom >= 18) {
+    setMapViewBounds(map, true);
+    setTimeout(function () {
+      searchCoffeeShop(shopSearch);
+    },2500);
+  }
+  else {
+    searchCoffeeShop(shopSearch);
+  }
+})
+
+// When reset button is clicked, bring map back to original position
+$("#btnResetView").on("click", function() {
+  setMapViewBounds(map, true);
 })
 
 // When the user scrolls down 20px from the top of the document, slide down the navbar
