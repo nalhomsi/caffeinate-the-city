@@ -1,19 +1,19 @@
 // Object array containing coffee shop information
 var coffeeShops = [
   {
-    Name: "Epoch @ North Loop",
+    Name: "Epoch - North Loop",
     Address: "221 W N Loop Blvd, Austin, TX 78751",
     Website: "http://www.epochcoffee.com/",
     coords: {lat: 30.318604, lon: -97.72454}
   },
   {
-    Name: "Epoch @ the Village",
+    Name: "Epoch - the Village",
     Address: "2700 W Anderson Ln #409, Austin, TX 78757",
     Website: "http://epochcoffee.com/",
     coords: {lat: 30.359107, lon: -97.734541}
   },
   {
-    Name: "Epoch @ Far West",
+    Name: "Epoch - Far West",
     Address: "3900 Far West Blvd, Austin, TX 78731",
     Website: "http://epochcoffee.com/",
     coords: {lat: 30.357313, lon: -97.760621}
@@ -31,7 +31,7 @@ var coffeeShops = [
     coords: {lat: 30.355512, lon: -97.73019}
   },
   {
-    Name: "Lazydaze +Coffeeshop",
+    Name: "Lazydaze Coffeeshop",
     Address: "1738 W Anderson Ln, Austin, TX 78757",
     Website: "https://www.lazydazeshop.com/",
     coords: {lat: 30.353472, lon: -97.724432}
@@ -239,7 +239,17 @@ function setMapViewBounds(map, bool){
 
 // Function to generate shop buttons for each entry in the coffeeShops array
 function createShopButtons() {
+
+  // Sorts coffeeshops alphabetically by name
+  coffeeShops.sort(function(a, b) {
+    var textA = a.Name.toUpperCase();
+    var textB = b.Name.toUpperCase();
+    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+  });
+  
+  // Creates shop buttons as well as populates the directions drop down
   coffeeShops.forEach(function(shop){
+    $('#directionsSelect').append('<option value="' + shop.coords.lat + ',' + shop.coords.lon + '">' + shop.Name + '</option>');
     $('#shop-list').append('<a class="panel-block"><button class="button is-link is-fullwidth shopbtns">' + shop.Name + '</button></a>');
   })
 }
@@ -249,6 +259,238 @@ function searchCoffeeShop(shopName) {
   var index = coffeeShops.findIndex(x => x.Name === shopName);
   map.setCenter({lat: coffeeShops[index].coords.lat, lng: coffeeShops[index].coords.lon});
   map.setZoom(18, true);
+}
+
+// Function to geocode user's entered address
+function geocode(platform) {
+  var geocoder = platform.getSearchService(),
+      geocodingParameters = {
+        q: $("#userAddress").val()
+      };
+  geocoder.geocode(
+    geocodingParameters,
+    onSuccess,
+    onError
+  );
+}
+
+// Checks to see if the function can be completed
+function onSuccess(result) {
+  var locations = result.items;
+  calculateRouteFromAtoB(platform, locations);
+}
+
+// Function to check for error and display modal
+function onError(error) {
+  $('#addressError').addClass('is-active');
+}
+
+// Function to add locations to the panel
+function addLocationsToPanel(locations){
+  var nodeOL = document.createElement('ul'),
+      i;
+
+  nodeOL.style.fontSize = 'small';
+  nodeOL.style.marginLeft ='5%';
+  nodeOL.style.marginRight ='5%';
+
+
+   for (i = 0;  i < locations.length; i += 1) {
+     let location = locations[i];
+     var li = document.createElement('li'),
+          divLabel = document.createElement('div'),
+          address = location.address,
+          content =  '<strong style="font-size: large;">' + address.label  + '</strong></br>';
+          position = location.position;
+
+      content += '<strong>houseNumber:</strong> ' + address.houseNumber + '<br/>';
+      content += '<strong>street:</strong> '  + address.street + '<br/>';
+      content += '<strong>district:</strong> '  + address.district + '<br/>';
+      content += '<strong>city:</strong> ' + address.city + '<br/>';
+      content += '<strong>postalCode:</strong> ' + address.postalCode + '<br/>';
+      content += '<strong>county:</strong> ' + address.county + '<br/>';
+      content += '<strong>country:</strong> ' + address.countryName + '<br/>';
+      content += '<strong>position:</strong> ' +
+        Math.abs(position.lat.toFixed(4)) + ((position.lat > 0) ? 'N' : 'S') +
+        ' ' + Math.abs(position.lng.toFixed(4)) + ((position.lng > 0) ? 'E' : 'W') + '<br/>';
+
+      divLabel.innerHTML = content;
+      li.appendChild(divLabel);
+
+      nodeOL.appendChild(li);
+  }
+
+  $('#outputDirections').append(nodeOL);
+}
+
+// Function to calculate the route from the user's inputted address to the selected coffee shop
+function calculateRouteFromAtoB(platform, locations) {
+  var router = platform.getRoutingService(null, 8),
+      routeRequestParams = {
+        routingMode: 'fast',
+        transportMode: 'car',
+        origin: locations[0].position.lat + ',' + locations[0].position.lng, // User's inputted address
+        destination: $('#directionsSelect').val(), // Selected coffee shop
+        return: 'polyline,turnByTurnActions,actions,instructions,travelSummary'
+      };
+
+  router.calculateRoute(
+    routeRequestParams,
+    routeOnSuccess,
+    routeOnError
+  ); 
+}
+
+// Check to see if the function can be completed
+function routeOnSuccess(result) {
+  var route = result.routes[0];
+
+  try {
+    addRouteShapeToMap(route);
+    addManueversToMap(route);
+    addWaypointsToPanel(route);
+    addManueversToPanel(route);
+    addSummaryToPanel(route);
+  } catch (error) {
+    $('#addressError').addClass('is-active');
+  }
+}
+
+function routeOnError(error) {
+  $('#addressError').addClass('is-active');
+}
+
+// Function to add the lines for the directions
+function addRouteShapeToMap(route) {
+  route.sections.forEach((section) => {
+    // decode LineString from the flexible polyline
+    let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+
+    // Create a polyline to display the route:
+    let polyline = new H.map.Polyline(linestring, {
+      style: {
+        lineWidth: 4,
+        strokeColor: 'rgba(0, 128, 255, 0.7)'
+      }
+    });
+
+    polyline.id = "route";
+    // Add the polyline to the map
+    map.addObject(polyline);
+    // And zoom to its bounding rectangle
+    map.getViewModel().setLookAtData({
+      bounds: polyline.getBoundingBox()
+    },true);
+  });
+}
+
+// Function to add manuevers to the map
+function addManueversToMap(route) {
+  var svgMarkup = '<svg width="18" height="18" ' +
+    'xmlns="http://www.w3.org/2000/svg">' +
+    '<circle cx="8" cy="8" r="8" ' +
+      'fill="#1b468d" stroke="white" stroke-width="1" />' +
+    '</svg>',
+    dotIcon = new H.map.Icon(svgMarkup, {anchor: {x:8, y:8}}),
+    group = new H.map.Group(),
+    i,
+    j;
+  group.id = "route";
+  route.sections.forEach((section) => {
+    let poly = H.geo.LineString.fromFlexiblePolyline(section.polyline).getLatLngAltArray();
+
+    let actions = section.actions;
+    // Add a marker for each maneuver
+    for (i = 0; i < actions.length; i += 1) {
+      let action = actions[i];
+      var marker = new H.map.Marker({
+        lat: poly[action.offset * 3],
+        lng: poly[action.offset * 3 + 1]},
+        {icon: dotIcon});
+      marker.instruction = action.instruction;
+      group.addObject(marker);
+    }
+
+    group.addEventListener('tap', function (evt) {
+      map.setCenter(evt.target.getGeometry());
+    }, false);
+
+    // Add the maneuvers group to the map
+    map.addObject(group);
+  });
+}
+
+// Function to add waypoints to the directions panel
+function addWaypointsToPanel(route) {
+  var nodeH3 = document.createElement('h3'),
+    labels = [];
+
+  console.log(route)
+  route.sections.forEach((section) => {
+    labels.push(
+      section.turnByTurnActions[0].nextRoad.name[0].value)
+  });
+
+  nodeH3.textContent = labels.join(' - ');
+  $('#outputDirections').append(nodeH3);
+}
+
+// Function to add the summary to the directions panel
+function addSummaryToPanel(route) {
+  let duration = 0,
+    distance = 0;
+
+  route.sections.forEach((section) => {
+    distance += section.travelSummary.length;
+    duration += section.travelSummary.duration;
+  });
+
+  var summaryDiv = document.createElement('div'),
+    content = '<b>Total distance</b>: ' + distance + 'm. <br />' +
+      '<b>Travel Time</b>: ' + toMMSS(duration) + ' (in current traffic)';
+
+  summaryDiv.style.fontSize = 'small';
+  summaryDiv.style.marginLeft = '5%';
+  summaryDiv.style.marginRight = '5%';
+  summaryDiv.innerHTML = content;
+  $('#outputDirections').append(summaryDiv);
+}
+
+// Function to add the manuevers to the directions panel
+function addManueversToPanel(route) {
+  var nodeOL = document.createElement('ol');
+
+  nodeOL.style.fontSize = 'small';
+  nodeOL.style.marginLeft ='5%';
+  nodeOL.style.marginRight ='5%';
+  nodeOL.className = 'directions';
+
+  route.sections.forEach((section) => {
+    section.actions.forEach((action, idx) => {
+      var li = document.createElement('li'),
+        spanInstruction = document.createElement('span');
+
+      spanInstruction.innerHTML = section.actions[idx].instruction;
+      li.appendChild(spanInstruction);
+
+      nodeOL.appendChild(li);
+    });
+  });
+
+  $('#outputDirections').append(nodeOL);
+}
+
+function toMMSS(duration) {
+  return Math.floor(duration / 60) + ' minutes ' + (duration % 60) + ' seconds.';
+}
+
+// Function to find objects by their ID on the map and remove them
+function removeObjectsById(id){
+  for (object of map.getObjects()) {
+    if (object.id === id) {
+      map.removeObject(object);
+    }
+  }
 }
 // End Function Section
 
@@ -307,9 +549,30 @@ $("#shop-list").on("click", ".shopbtns", function() {
   }
 })
 
+// When submit button is pressed, calculate directions
+$("#directionSubmit").on("click", function() {
+  console.log("submit button pressed")
+  removeObjectsById("route");
+  geocode(platform);
+})
+
 // When reset button is clicked, bring map back to original position
-$("#btnResetView").on("click", function() {
+$("#viewReset").on("click", function() {
+  $("#outputDirections").html("");
+  $("#outputDirections").html("<h2>Directions</h2>");
+  $('#userAddress').val("");
+  removeObjectsById("route");
   setMapViewBounds(map, true);
+})
+
+// Reset map view button
+$('#btnResetView').on("click", function() {
+  setMapViewBounds(map, true);
+})
+
+// Checks to see if the modal is closed
+$('#addressErrorClose').on("click", function() {
+  $('#addressError').removeClass('is-active');
 })
 
 // When the user scrolls down 20px from the top of the document, slide down the navbar
