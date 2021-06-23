@@ -36,12 +36,12 @@
 		</div>
 	</div>
 	<div id="directions" class="container">
-		<div class="columns">
+		<div class="columns has-text-primary-dark">
 			<div class="column">
 				<div class="field">
 					<label for="inputAddress" class="label">Enter your Address:</label>
 					<div class="control">
-						<input id="userAddress" type="text" class="input" placeholder="1100 Congress Ave, Austin, TX 78701">
+						<input id="userAddress" type="text" class="input" placeholder="1100 Congress Ave, Austin, TX 78701" required="required">
 					</div>
 				</div>
 				<div class="field">
@@ -55,13 +55,27 @@
 				<div class="field is-grouped">
 					<div class="control">
 						<input id="directionSubmit" type="submit" class="button" value="Submit">
-						<input type="reset" class="button" value="Reset">
+					</div>
+					<div class="control">
+						<button id="viewReset" class="button">Reset</button>
 					</div>
 				</div>
 			</div>
 			<div id="outputDirections" class="column">
-				<h1>Directions</h3>
+				<h2>Directions</h2>
 			</div>
+		</div>
+	</div>
+	<div id="addressError" class="modal">
+		<div class="modal-background"></div>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">Error :(</p>
+				<button id='addressErrorClose' class="delete" aria-label="close"></button>
+			</header>
+			<section class="modal-card-body">
+				<p class="has-text-danger">Please ensure that you entered a correct address</p>
+			</section>
 		</div>
 	</div>
 	

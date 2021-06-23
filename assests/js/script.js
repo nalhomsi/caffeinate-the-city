@@ -239,6 +239,15 @@ function setMapViewBounds(map, bool){
 
 // Function to generate shop buttons for each entry in the coffeeShops array
 function createShopButtons() {
+
+  // Sorts coffeeshops alphabetically by name
+  coffeeShops.sort(function(a, b) {
+    var textA = a.Name.toUpperCase();
+    var textB = b.Name.toUpperCase();
+    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+  });
+  
+  // Creates shop buttons as well as populates the directions drop down
   coffeeShops.forEach(function(shop){
     $('#directionsSelect').append('<option value="' + shop.coords.lat + ',' + shop.coords.lon + '">' + shop.Name + '</option>');
     $('#shop-list').append('<a class="panel-block"><button class="button is-link is-fullwidth shopbtns">' + shop.Name + '</button></a>');
@@ -265,15 +274,18 @@ function geocode(platform) {
   );
 }
 
+// Checks to see if the function can be completed
 function onSuccess(result) {
   var locations = result.items;
   calculateRouteFromAtoB(platform, locations);
 }
 
+// Function to check for error and display modal
 function onError(error) {
-  alert("Can't reach remote server");
+  $('#addressError').addClass('is-active');
 }
 
+// Function to add locations to the panel
 function addLocationsToPanel(locations){
   var nodeOL = document.createElement('ul'),
       i;
@@ -306,14 +318,13 @@ function addLocationsToPanel(locations){
       li.appendChild(divLabel);
 
       nodeOL.appendChild(li);
-      console.log(position);
   }
 
   $('#outputDirections').append(nodeOL);
 }
 
+// Function to calculate the route from the user's inputted address to the selected coffee shop
 function calculateRouteFromAtoB(platform, locations) {
-  console.log(locations[0].position)
   var router = platform.getRoutingService(null, 8),
       routeRequestParams = {
         routingMode: 'fast',
@@ -330,34 +341,26 @@ function calculateRouteFromAtoB(platform, locations) {
   ); 
 }
 
+// Check to see if the function can be completed
 function routeOnSuccess(result) {
   var route = result.routes[0];
 
-  addRouteShapeToMap(route);
-  addManueversToMap(route);
-  addWaypointsToPanel(route);
-  addManueversToPanel(route);
-  addSummaryToPanel(route);
-}
-
-function routeOnError(error) {
-  alert("Can't reach the remote server");
-}
-
-function openBubble(position, text) {
-  if (!bubble) {
-    bubble = new H.ui.InfoBubble(
-      position,
-      // The FO property holds the province name.
-      {content: text});
-    ui.addBubble(bubble);
-  } else {
-    bubble.setPosition(position);
-    bubble.setContent(text);
-    bubble.open();
+  try {
+    addRouteShapeToMap(route);
+    addManueversToMap(route);
+    addWaypointsToPanel(route);
+    addManueversToPanel(route);
+    addSummaryToPanel(route);
+  } catch (error) {
+    $('#addressError').addClass('is-active');
   }
 }
 
+function routeOnError(error) {
+  $('#addressError').addClass('is-active');
+}
+
+// Function to add the lines for the directions
 function addRouteShapeToMap(route) {
   route.sections.forEach((section) => {
     // decode LineString from the flexible polyline
@@ -377,10 +380,11 @@ function addRouteShapeToMap(route) {
     // And zoom to its bounding rectangle
     map.getViewModel().setLookAtData({
       bounds: polyline.getBoundingBox()
-    });
+    },true);
   });
 }
 
+// Function to add manuevers to the map
 function addManueversToMap(route) {
   var svgMarkup = '<svg width="18" height="18" ' +
     'xmlns="http://www.w3.org/2000/svg">' +
@@ -416,21 +420,22 @@ function addManueversToMap(route) {
   });
 }
 
+// Function to add waypoints to the directions panel
 function addWaypointsToPanel(route) {
   var nodeH3 = document.createElement('h3'),
     labels = [];
 
+  console.log(route)
   route.sections.forEach((section) => {
     labels.push(
       section.turnByTurnActions[0].nextRoad.name[0].value)
-    labels.push(
-      section.turnByTurnActions[section.turnByTurnActions.length - 1].currentRoad.name[0].value)
   });
 
   nodeH3.textContent = labels.join(' - ');
   $('#outputDirections').append(nodeH3);
 }
 
+// Function to add the summary to the directions panel
 function addSummaryToPanel(route) {
   let duration = 0,
     distance = 0;
@@ -451,6 +456,7 @@ function addSummaryToPanel(route) {
   $('#outputDirections').append(summaryDiv);
 }
 
+// Function to add the manuevers to the directions panel
 function addManueversToPanel(route) {
   var nodeOL = document.createElement('ol');
 
@@ -462,12 +468,9 @@ function addManueversToPanel(route) {
   route.sections.forEach((section) => {
     section.actions.forEach((action, idx) => {
       var li = document.createElement('li'),
-        spanArrow = document.createElement('span'),
         spanInstruction = document.createElement('span');
 
-      spanArrow.className = 'arrow ' + (action.direction || '') + action.action;
       spanInstruction.innerHTML = section.actions[idx].instruction;
-      li.appendChild(spanArrow);
       li.appendChild(spanInstruction);
 
       nodeOL.appendChild(li);
@@ -481,6 +484,7 @@ function toMMSS(duration) {
   return Math.floor(duration / 60) + ' minutes ' + (duration % 60) + ' seconds.';
 }
 
+// Function to find objects by their ID on the map and remove them
 function removeObjectsById(id){
   for (object of map.getObjects()) {
     if (object.id === id) {
@@ -488,7 +492,6 @@ function removeObjectsById(id){
     }
   }
 }
-
 // End Function Section
 
 // Main
@@ -546,13 +549,30 @@ $("#shop-list").on("click", ".shopbtns", function() {
   }
 })
 
+// When submit button is pressed, calculate directions
 $("#directionSubmit").on("click", function() {
+  console.log("submit button pressed")
+  removeObjectsById("route");
   geocode(platform);
 })
 
 // When reset button is clicked, bring map back to original position
-$("#btnResetView").on("click", function() {
+$("#viewReset").on("click", function() {
+  $("#outputDirections").html("");
+  $("#outputDirections").html("<h2>Directions</h2>");
+  $('#userAddress').val("");
+  removeObjectsById("route");
   setMapViewBounds(map, true);
+})
+
+// Reset map view button
+$('#btnResetView').on("click", function() {
+  setMapViewBounds(map, true);
+})
+
+// Checks to see if the modal is closed
+$('#addressErrorClose').on("click", function() {
+  $('#addressError').removeClass('is-active');
 })
 
 // When the user scrolls down 20px from the top of the document, slide down the navbar
