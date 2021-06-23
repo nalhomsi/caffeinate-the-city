@@ -7,6 +7,7 @@
      <meta name="HandheldFriendly" content="true">
 	<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 	<link rel="stylesheet" href="https://bulma.io">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 	<link rel="stylesheet" href="assests/css/style.css">
 	<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
@@ -27,7 +28,7 @@
 				</div>
 				<a href=index.html>Caffeinate</a>
 				<a href=reviews.html>Reviews</a>
-				<a href=contact.html>Contact</a>
+				<a href=contactus.html>Contact</a>
 			</div>
 		</div>
 		  <div id="navbarBasicExample" class="navbar-menu">
@@ -41,13 +42,17 @@
 			</div>
 		  </nav>
 	</div>
-	<div id="map-section">
-		<div style="height: 600px" id="mapContainer"></div>
+	<div id="map-section" class="columns">
+		<div style="height: 600px" id="mapContainer" class="column"></div>
+		<div id="shop-list" style="height: 600px; overflow: scroll" class="panel column">
+			<p class="panel-heading">Find your coffee shop:</p>
+		</div>
 	</div>
-
+	
 	<div class="footer">
 		<p> &#169; 2021 Geoffrey, Jason, Justin, and Noor. &#169;Header image Dmitry Kostyukov for The New York Times </p>
 	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="assests/js/script.js"></script>
 </body>
 
