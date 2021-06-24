@@ -425,7 +425,6 @@ function addWaypointsToPanel(route) {
   var nodeH3 = document.createElement('h3'),
     labels = [];
 
-  console.log(route)
   route.sections.forEach((section) => {
     labels.push(
       section.turnByTurnActions[0].nextRoad.name[0].value)
@@ -492,6 +491,21 @@ function removeObjectsById(id){
     }
   }
 }
+
+function loadAddress() {
+  userAddress = localStorage.getItem("userAddress");
+
+  if (!userAddress) {
+    userAddress = "";
+  }
+
+  $('#userAddress').val(userAddress);
+}
+
+function saveAddress() {
+  userAddress = $('#userAddress').val();
+  localStorage.setItem("userAddress", userAddress);
+}
 // End Function Section
 
 // Main
@@ -532,6 +546,7 @@ window.onload = function () {
   restrictMap(map);
   addInfoBubble(map);
   createShopButtons();
+  loadAddress();
 }
 
 // When a shop button is clicked, center map and zoom in on the specified location
@@ -551,7 +566,9 @@ $("#shop-list").on("click", ".shopbtns", function() {
 
 // When submit button is pressed, calculate directions
 $("#directionSubmit").on("click", function() {
-  console.log("submit button pressed")
+  $("#outputDirections").html("");
+  $("#outputDirections").html("<h2>Directions</h2>");
+  saveAddress();
   removeObjectsById("route");
   geocode(platform);
 })
