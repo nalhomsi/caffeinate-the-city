@@ -1,19 +1,19 @@
 // Object array containing coffee shop information
 var coffeeShops = [
   {
-    Name: "Epoch - North Loop",
+    Name: "Epoch @ North Loop",
     Address: "221 W N Loop Blvd, Austin, TX 78751",
     Website: "http://www.epochcoffee.com/",
     coords: {lat: 30.318604, lon: -97.72454}
   },
   {
-    Name: "Epoch - the Village",
+    Name: "Epoch @ the Village",
     Address: "2700 W Anderson Ln #409, Austin, TX 78757",
     Website: "http://epochcoffee.com/",
     coords: {lat: 30.359107, lon: -97.734541}
   },
   {
-    Name: "Epoch - Far West",
+    Name: "Epoch @ Far West",
     Address: "3900 Far West Blvd, Austin, TX 78731",
     Website: "http://epochcoffee.com/",
     coords: {lat: 30.357313, lon: -97.760621}
@@ -61,7 +61,7 @@ var coffeeShops = [
     coords: {lat: 30.293563, lon: -97.716021}
   },
   {
-    Name: "85C Bakery Cafe - Austin Airport",
+    Name: "85°C Bakery Cafe - Austin Airport",
     Address: "6929 Airport Blvd #197, Austin, TX 78752",
     Website: "http://85cbakerycafe.com/",
     coords: {lat: 30.336612, lon: -97.717673}
@@ -176,6 +176,7 @@ var coffeeShops = [
   }
 ];
 
+
 // Start Function Section
 // Function that adds markers to a group of markers
 function addMarkerToGroup(group, coordinate, html){
@@ -184,6 +185,7 @@ function addMarkerToGroup(group, coordinate, html){
   marker.setData(html);
   group.addObject(marker);
 }
+
 
 // Function that adds InfoBubble above the markers when clicked
 function addInfoBubble(map) {
@@ -228,6 +230,7 @@ function restrictMap(map){
     }
   });
 }
+
 
 // Function to set the view bounds within a map region
 function setMapViewBounds(map, bool){
@@ -509,6 +512,13 @@ function saveAddress() {
 // End Function Section
 
 // Main
+// function setMapViewBounds(map){
+//   var bbox = new H.geo.Rect(30.397704598324953,-97.82197149621298,30.202843286012932,-97.69906076638804);
+//   map.getViewModel().setLookAtData({
+//     bounds: bbox
+//   });
+// }
+
 // Here API Information
 var platform = new H.service.Platform({
   'apikey': 'ycAxA8uZf-kPh9Jz-FGc9BttR8Zqv8M6XnO4jhwO6ko'
@@ -517,13 +527,19 @@ var platform = new H.service.Platform({
 // Obtain the default map types from the platform object:
 var defaultLayers = platform.createDefaultLayers();
 
+
 // Initialize a map - this map is centered over Central Texas
 var map = new H.Map(document.getElementById('mapContainer'),
   defaultLayers.vector.normal.map,{
   center: {lat:30.2855, lng:-97.6654},
+//Step 2: initialize a map - this map is centered over Europe
+// var map = new H.Map(document.getElementById('mapContainer'),
+//   defaultLayers.vector.normal.map,{
+//   center: {lat:50, lng:5},
   zoom: 4,
   pixelRatio: window.devicePixelRatio || 1
 });
+
 
 // Set map tilt for aethetics
 map.getViewModel().setLookAtData({
@@ -533,6 +549,8 @@ map.getViewModel().setLookAtData({
 // add a resize listener to make sure that the map occupies the whole container
 window.addEventListener('resize', () => map.getViewPort().resize());
 
+
+//Step 3: make the map interactive
 // MapEvents enables the event system
 // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
 var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
@@ -593,6 +611,14 @@ $('#addressErrorClose').on("click", function() {
   $('#addressError').removeClass('is-active');
 })
 
+// Now use the map as required...
+// window.onload = function () {
+//   setMapViewBounds(map);
+//   restrictMap(map);
+//   addInfoBubble(map);
+// }
+
+
 // When the user scrolls down 20px from the top of the document, slide down the navbar
 window.onscroll = function () { scrollFunction() };
 
@@ -602,6 +628,7 @@ function scrollFunction() {
   } else {
     document.getElementById("navbar").style.top = "-50px";
   }
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -628,3 +655,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// }

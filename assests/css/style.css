@@ -24,6 +24,7 @@ body {
     background-color: transparent;
 }
 
+
 .navbar-start {
     width: 100%
 }
@@ -67,6 +68,30 @@ body {
     border-radius: 5px;
 }
 
+	
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			color: white;
+			background-color: #e4dcd1;
+			background-image: url("../../oldgrain.jpg");
+	}
+ 
+		* {
+			box-sizing: border-box;
+		}
+		.bg-img {
+			background-image: url("../../coffee.jpg");
+			min-height: 315px;
+			border: 5px solid rgb(68, 44, 9);
+			border-radius: 15px;
+			border-bottom: 15px solid rgb(36, 23, 5);
+
+			/* Center and scale the image nicely */
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: cover;
+
+
 #map-section,
 #directions {
     width: 80%;
@@ -92,11 +117,20 @@ body {
     width: 100%;
 }
 
+		/* The navbar */
+		.topnav {
+			overflow: hidden;
+			background-color: rgb(32, 20, 2);
+			border-radius: 10px;
+		} 
+
+
 .shopbtns {
 	white-space:normal;
 	word-wrap: break-word;
 	height: auto;
 }
+
 
 .footer {
     width: 100%;
@@ -143,3 +177,49 @@ input[type='submit']:hover {
         max-width: 100%;
     }
 }
+
+		.topnav a:hover {
+			background-color:rgb(68, 44, 9);
+			color: #e4dcd1;
+		}
+/*scrollbar styling*/
+		/* width */
+::-webkit-scrollbar {
+	width: 12px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 4px  rgb(68, 44, 9);
+	border-radius: 5px;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+	background:   rgb(68, 44, 9);
+	border-radius: 5px;
+  }
+	
+	#map-section {
+		width: 80%;
+		max-width: 80%;
+		margin:auto;
+    text-align: center;
+    padding:15px 15px 200px; 
+    font-size: 20px;
+	border: 3px solid rgb(32, 20, 2);
+	border-radius: 15px;
+    }
+	#map-section > iframe {
+		height: 100%;
+		width: 100%;
+	}
+	
+	.footer {
+		width: 100%;
+		background-color: rgb(68, 44, 9);
+		color: white;
+		text-align: center;
+	  }
+
+
