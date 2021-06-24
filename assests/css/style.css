@@ -78,6 +78,10 @@ body {
     border-radius: 15px;
 }
 
+.panel-heading,
+#btnResetView {
+    overflow-y:auto;
+}
 #directions {
     text-align:inherit;
 }
@@ -128,4 +132,12 @@ input[type='submit']:hover {
 .container {
     border-radius: 5px;
     padding: 20px;
+}
+
+@media (max-width: 768px) {
+    #map-section,
+    #directions {
+        width:auto;
+        max-width: 100%;
+    }
 }

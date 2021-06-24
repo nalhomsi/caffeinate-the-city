@@ -250,7 +250,7 @@ function createShopButtons() {
   // Creates shop buttons as well as populates the directions drop down
   coffeeShops.forEach(function(shop){
     $('#directionsSelect').append('<option value="' + shop.coords.lat + ',' + shop.coords.lon + '">' + shop.Name + '</option>');
-    $('#shop-list').append('<a class="panel-block"><button class="button is-link is-fullwidth shopbtns">' + shop.Name + '</button></a>');
+    $('#shopbtnsList').append('<a class="panel-block"><button class="button is-link is-fullwidth shopbtns">' + shop.Name + '</button></a>');
   })
 }
 
@@ -584,6 +584,7 @@ $("#viewReset").on("click", function() {
 
 // Reset map view button
 $('#btnResetView').on("click", function() {
+  removeObjectsById("route");
   setMapViewBounds(map, true);
 })
 
